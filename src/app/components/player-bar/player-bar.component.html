@@ -1,0 +1,33 @@
+<div class="player-bar">
+    <div class="duration">
+        <span>{{ fmt(player.currentTime()) }}</span>
+        <input type="range" class="progresso" min="0" step="1" [max]="player.duration() || 0" [value]="player.currentTime()"
+            (input)="player.seek(+$any($event.target).value)" />
+        <span>{{ fmt(player.duration()) }}</span>
+    </div>
+
+    <div class="control-section">
+        <button (click)="player.prev()">⏮</button>
+        <button (click)="player.toggle()">{{ player.playing() ? '⏸' : '▶' }}</button>
+        <button (click)="player.next()">⏭</button>
+
+        <button type="button" class="volume-toggle" (click)="volumeAberto = !volumeAberto"
+            [attr.aria-expanded]="volumeAberto">🔊</button>
+        @if (volumeAberto) {
+            <input type="range" min="0" max="100" [value]="player.volume()"
+                (input)="player.setVolume(+$any($event.target).value)" />
+        }
+    </div>
+
+    <div class="info">
+        <strong class="titulo">{{ player.current()?.titulo ?? 'Nenhuma música' }}</strong>
+        @if (player.current()?.artista) {
+            <span class="artista">{{ player.current()?.artista }}</span>
+        }
+    </div>
+
+    <!-- o iframe do YouTube nasce aqui; precisa ficar visível -->
+    <div class="yt-box">
+        <div id="yt-player"></div>
+    </div>
+</div>

@@ -6,6 +6,7 @@ import { MidiasComponent } from '../midias/midias.component';
 import { LojasComponent } from '../lojas/lojas.component';
 import { BlogComponent } from '../blog/blog.component';
 import { PaginaService } from '../../services/pagina.service';
+import { PlayerService } from '../../services/player.service';
 
 @Component({
   selector: 'app-base',
@@ -22,6 +23,7 @@ import { PaginaService } from '../../services/pagina.service';
 })
 export class BaseComponent {
   private readonly paginaService = inject(PaginaService);
+  readonly musicPlayerService = inject(PlayerService);
 
   /** Página atual, recebida do serviço sempre que o nav muda. */
   readonly pagina$ = this.paginaService.pagina$;

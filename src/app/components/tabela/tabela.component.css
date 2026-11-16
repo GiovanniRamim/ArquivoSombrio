@@ -4,6 +4,7 @@
 
 .tabela-wrapper {
   overflow-x: auto;
+  height: 45rem;
   border: 1px solid #2a2f3a;
   border-radius: 8px;
 }

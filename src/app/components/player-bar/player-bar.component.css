@@ -1,0 +1,53 @@
+.player-bar {
+    position: fixed;
+    bottom: 1rem;
+    right: 0;
+    z-index: 1000;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: #1e1e1e;
+    color: #fff;
+    border-radius: 8px;
+}
+
+/* Barra de progresso no topo do player, ocupando a largura total dele. */
+.duration {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.progresso {
+    flex: 1;
+    margin: 0;
+}
+
+/* Comandos centralizados, abaixo da barra de progresso. */
+.control-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.titulo {
+    text-align: center;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.artista {
+    font-size: 0.85rem;
+    opacity: 0.7;
+}

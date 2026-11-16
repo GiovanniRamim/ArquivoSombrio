@@ -3,6 +3,13 @@ import { CommonModule } from '@angular/common';
 import { DataService } from '../../services/data.service';
 import { TabelaDados } from '../../models/tabela-dados.model';
 
+/** Ação exibida em cada linha da tabela. */
+export interface AcaoLinha {
+  rotulo: string;
+  icone: string;
+  executar: (linha: any) => void;
+}
+
 @Component({
   selector: 'app-tabela',
   standalone: true,
@@ -13,6 +20,9 @@ import { TabelaDados } from '../../models/tabela-dados.model';
 export class TabelaComponent implements OnChanges {
   /** Caminho da planilha local, ex.: assets/literatura.csv */
   @Input() caminho = '';
+  @Input() acao = (linha: any) => {};
+  /** Lista de ações por linha. Se não informada, usa `acao` com o botão padrão. */
+  @Input() acoes: AcaoLinha[] | null = null;
 
   dados: TabelaDados | null = null;
   carregando = false;
@@ -101,5 +111,9 @@ export class TabelaComponent implements OnChanges {
         this.erro = `Não foi possível carregar a planilha: ${err.message}`;
       })
       .finally(() => (this.carregando = false));
+  }
+
+  executeCustomAction(linha: any) {
+    this.acao(linha);
   }
 }

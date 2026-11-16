@@ -31,6 +31,19 @@
                 <div class="dropdown-menu" *ngIf="menuAberto === linha">
                   <a [href]="linha[coluna]" target="_blank" rel="noopener noreferrer">{{linha[coluna]}}</a>
                 </div>
+                <ng-container *ngIf="acoes; else acaoPadrao">
+                  <button
+                    *ngFor="let a of acoes"
+                    type="button"
+                    class="item-botao"
+                    [title]="a.rotulo"
+                    [attr.aria-label]="a.rotulo"
+                    (click)="a.executar(linha)"
+                  >{{ a.icone }} {{ a.rotulo }}</button>
+                </ng-container>
+                <ng-template #acaoPadrao>
+                  <button type="button" class="item-botao" (click)="executeCustomAction(linha)">Do Something</button>
+                </ng-template>
               </div>
             </ng-container>
             <ng-template #texto>{{ linha[coluna] }}</ng-template>
