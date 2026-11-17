@@ -1,8 +1,51 @@
 <nav class="subsections">
-  <h2 class="titulo">Subseções</h2>
+  <h2 class="titulo">{{ titulo }}</h2>
   <ul>
-    <li *ngFor="let link of links">
-      <a [routerLink]="link.rota" routerLinkActive="ativo">{{ link.rotulo }}</a>
+    <li *ngFor="let link of links; let i = index"
+        [class.arrastando]="arrastando === i"
+        [attr.draggable]="modoPlaylist"
+        (dragstart)="modoPlaylist && iniciarArraste(i, $event)"
+        (dragover)="modoPlaylist && permitirSoltar($event)"
+        (drop)="modoPlaylist && soltar(i, $event)"
+        (dragend)="finalizarArraste()">
+
+      <ng-container *ngIf="modoPlaylist; else itemPadrao">
+        <div class="item-playlist" [class.ativo]="link.ativo">
+          <span class="alca" aria-hidden="true">⠿</span>
+          <span class="rotulo">{{ link.rotulo }}</span>
+
+          <button *ngFor="let a of acoesItem" type="button" class="btn-item"
+                  [title]="a.rotulo" [attr.aria-label]="a.rotulo"
+                  (click)="a.executar(i)">{{ a.icone }}</button>
+
+          <div class="menu-item">
+            <button type="button" class="btn-item" aria-label="Mais opções"
+                    (click)="alternarMenu(i)">⋯</button>
+            <div class="menu-aberto" *ngIf="menuAberto === i">
+              <button *ngFor="let a of acoesMenu" type="button" (click)="executarMenu(a, i)">
+                {{ a.icone }} {{ a.rotulo }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #itemPadrao>
+        <a
+          *ngIf="link.rota; else itemAcao"
+          [routerLink]="link.rota"
+          routerLinkActive="ativo"
+        >{{ link.rotulo }}</a>
+        <ng-template #itemAcao>
+          <a
+            role="button"
+            tabindex="0"
+            [class.ativo]="link.ativo"
+            (click)="acao?.(i)"
+            (keydown.enter)="acao?.(i)"
+          >{{ link.rotulo }}</a>
+        </ng-template>
+      </ng-template>
     </li>
   </ul>
 </nav>

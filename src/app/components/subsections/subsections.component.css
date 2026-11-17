@@ -34,6 +34,10 @@ a {
   transition: background-color 0.2s, color 0.2s;
 }
 
+a {
+  cursor: pointer;
+}
+
 a:hover {
   background-color: #1f2430;
   color: #ffffff;
@@ -42,4 +46,83 @@ a:hover {
 a.ativo {
   background-color: #1f6feb;
   color: #ffffff;
+}
+
+/* Modo playlist */
+li.arrastando {
+  opacity: 0.4;
+}
+
+.item-playlist {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.4rem 0.4rem 0.4rem 0.25rem;
+  border-radius: 6px;
+  color: #c9d1d9;
+}
+
+.item-playlist:hover {
+  background-color: #1f2430;
+}
+
+.item-playlist.ativo {
+  background-color: #1f6feb;
+  color: #ffffff;
+}
+
+.alca {
+  cursor: grab;
+  color: #6e7681;
+  user-select: none;
+}
+
+.rotulo {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-item {
+  padding: 0.15rem 0.4rem;
+  border: 1px solid #2a2f3a;
+  border-radius: 4px;
+  background-color: #222733;
+  color: #c9d1d9;
+  cursor: pointer;
+}
+
+.menu-item {
+  position: relative;
+}
+
+.menu-aberto {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+  padding: 0.25rem;
+  border: 1px solid #2a2f3a;
+  border-radius: 6px;
+  background-color: #222733;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.menu-aberto button {
+  padding: 0.4rem 0.6rem;
+  border: 0;
+  background: none;
+  color: #c9d1d9;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.menu-aberto button:hover {
+  background-color: #1f2430;
 }

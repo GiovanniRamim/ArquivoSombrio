@@ -139,17 +139,23 @@ export class PlayerService {
       return true;
     }
 
-    // fila de um único item, criada na hora a partir do link
-    this.queue.set([{
-      id: videoId,
-      titulo: info.titulo ?? '',
-      artista: info.artista ?? '',
-      link,
-  }]);
-  this.index.set(0);
-  this.loadCurrent();
-  return true;
-}
+    // já está na fila: toca a partir dela, sem recriar a lista
+    const existente = this.queue().findIndex((m) => getVideoId(m.link) === videoId);
+    if (existente >= 0) {
+      this.index.set(existente);
+      this.loadCurrent();
+      return true;
+    }
+
+    // não está na fila: adiciona ao fim e toca
+    this.queue.update((q) => [
+      ...q,
+      { id: videoId, titulo: info.titulo ?? '', artista: info.artista ?? '', link },
+    ]);
+    this.index.set(this.queue().length - 1);
+    this.loadCurrent();
+    return true;
+  }
 
   // Adiciona uma música ao fim da fila; começa a tocar se nada estiver carregado
   adicionarNaFila(link: string, info: { titulo?: string; artista?: string } = {}): boolean {
@@ -158,6 +164,9 @@ export class PlayerService {
       console.warn('Link do YouTube inválido:', link);
       return false;
     }
+
+    // evita duplicar a mesma música na fila
+    if (this.queue().some((m) => getVideoId(m.link) === videoId)) return true;
 
     this.queue.update((q) => [
       ...q,
@@ -169,6 +178,40 @@ export class PlayerService {
       this.loadCurrent();
     }
     return true;
+  }
+
+  // Remove um item da fila, mantendo a música atual quando possível
+  removerDaFila(indice: number) {
+    const fila = this.queue();
+    if (indice < 0 || indice >= fila.length) return;
+
+    const atual = this.current();
+    const nova = fila.filter((_, i) => i !== indice);
+    this.queue.set(nova);
+
+    if (!nova.length) {
+      this.index.set(-1);
+      return;
+    }
+    if (atual && nova.includes(atual)) {
+      this.index.set(nova.indexOf(atual));
+    } else {
+      // a música atual foi removida: toca a que ficou na mesma posição
+      this.index.set(Math.min(indice, nova.length - 1));
+      this.loadCurrent();
+    }
+  }
+
+  // Move um item da fila de uma posição para outra (reordenação)
+  moverNaFila(de: number, para: number) {
+    const fila = [...this.queue()];
+    if (de === para || de < 0 || para < 0 || de >= fila.length || para >= fila.length) return;
+
+    const atual = this.current();
+    const [item] = fila.splice(de, 1);
+    fila.splice(para, 0, item);
+    this.queue.set(fila);
+    if (atual) this.index.set(fila.indexOf(atual));
   }
 
   // 3. Verifica se um link é o que está tocando (para o destaque)

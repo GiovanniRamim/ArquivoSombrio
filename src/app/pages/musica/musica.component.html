@@ -1,4 +1,15 @@
-<section class="pagina">
-  <h1>Música</h1>
-  <app-tabela [caminho]="caminho" [acoes]="acoes"></app-tabela>
-</section>
+<div class="musica-layout">
+  <app-subsections
+    titulo="Playlist"
+    [links]="itensFila"
+    [modoPlaylist]="true"
+    [acoesItem]="acoesItemPlaylist"
+    [acoesMenu]="acoesMenuPlaylist"
+    (reordenar)="reordenarFila($event)"
+  ></app-subsections>
+
+  <section class="pagina">
+    <h1>Música</h1>
+    <app-tabela [caminho]="caminho" [acoes]="acoes"></app-tabela>
+  </section>
+</div>

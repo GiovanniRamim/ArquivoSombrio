@@ -1,0 +1,14 @@
+.musica-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.musica-layout > app-subsections {
+  flex: 0 0 220px;
+}
+
+.musica-layout > .pagina {
+  flex: 1;
+  min-width: 0;
+}
