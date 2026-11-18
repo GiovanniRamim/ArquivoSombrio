@@ -5,11 +5,15 @@
     [modoPlaylist]="true"
     [acoesItem]="acoesItemPlaylist"
     [acoesMenu]="acoesMenuPlaylist"
+    [acaoCabecalho]="adicionarCincoAleatorias"
+    rotuloAcaoCabecalho="🎲 Adicionar 5 aleatórias"
+    [acaoCabecalhoDesabilitada]="carregandoAleatorias"
+    [mensagemCabecalho]="mensagemAleatorias"
     (reordenar)="reordenarFila($event)"
   ></app-subsections>
 
   <section class="pagina">
-    <h1 class="titulo">Gothify</h1>
+    <h1 class="titulo">Gothify 𓂀</h1>
     <app-tabela [caminho]="caminho" [acoes]="acoes"></app-tabela>
   </section>
 </div>

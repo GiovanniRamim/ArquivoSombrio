@@ -35,6 +35,10 @@ export class SubsectionsComponent {
   @Input() modoPlaylist = false;
   @Input() acoesItem: AcaoSubsecao[] = [];
   @Input() acoesMenu: AcaoSubsecao[] = [];
+  @Input() acaoCabecalho: (() => void | Promise<void>) | null = null;
+  @Input() rotuloAcaoCabecalho = '';
+  @Input() acaoCabecalhoDesabilitada = false;
+  @Input() mensagemCabecalho = '';
 
   /** Emite { de, para } quando um item é arrastado para outra posição. */
   @Output() reordenar = new EventEmitter<{ de: number; para: number }>();

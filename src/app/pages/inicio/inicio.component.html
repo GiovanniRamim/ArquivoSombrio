@@ -1,0 +1,21 @@
+<section class="inicio">
+  <div class="apresentacao">
+    <p class="sobretitulo">⛧ Bem-vindo ao</p>
+    <h1 class="titulo">Arquivo Sombrio</h1>
+    <p class="descricao">
+      Um projeto destinado a divulgar mídias, arte e cultura da cena dark/goth.
+
+      Projeto 100% independente.
+    </p>
+  </div>
+
+  <nav class="secoes" aria-label="Seções do Arquivo Sombrio">
+    @for (secao of secoes; track secao.pagina) {
+      <button type="button" class="secao" (click)="abrirSecao(secao.pagina)">
+        <span class="secao-titulo">{{ secao.titulo }}</span>
+        <span class="secao-descricao">{{ secao.descricao }}</span>
+        <span class="secao-acao" aria-hidden="true">Explorar →</span>
+      </button>
+    }
+  </nav>
+</section>

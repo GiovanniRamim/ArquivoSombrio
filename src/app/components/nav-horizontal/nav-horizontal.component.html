@@ -1,8 +1,10 @@
 <nav class="nav-horizontal">
-  <h2 class="titulo">⛧ Arquivo Sombrio ⛧</h2>
+  <h2 class="titulo">
+    <a routerLink="/" (click)="selecionar('inicio')">⛧ Arquivo Sombrio ⛧</a>
+  </h2>
   <ul>
     @for (link of links; track link.pagina) {
-      <a routerLink="/" routerLinkActive="ativo" (click)="selecionar(link.pagina)">
+      <a routerLink="/" routerLinkActive="ativo" (click)="selecionar(link.pagina)" class="nav-label">
         {{ link.rotulo }}
       </a>
     }

@@ -1,5 +1,8 @@
 <section class="base">
   @switch (pagina$ | async) {
+    @case ('inicio') {
+      <app-inicio></app-inicio>
+    }
     @case ('literatura') {
       <app-literatura></app-literatura>
     }

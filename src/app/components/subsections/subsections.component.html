@@ -1,5 +1,17 @@
 <nav class="subsections">
-  <h2 class="titulo">{{ titulo }}</h2>
+  <div class="cabecalho">
+    <h2 class="titulo">{{ titulo }}</h2>
+    <button
+      *ngIf="acaoCabecalho && rotuloAcaoCabecalho"
+      type="button"
+      class="btn-cabecalho"
+      [disabled]="acaoCabecalhoDesabilitada"
+      (click)="acaoCabecalho()"
+    >{{ rotuloAcaoCabecalho }}</button>
+    <p *ngIf="mensagemCabecalho" class="mensagem-cabecalho" role="status">
+      {{ mensagemCabecalho }}
+    </p>
+  </div>
   <ul>
     <li *ngFor="let link of links; let i = index"
         [class.arrastando]="arrastando === i"
@@ -12,7 +24,13 @@
       <ng-container *ngIf="modoPlaylist; else itemPadrao">
         <div class="item-playlist" [class.ativo]="link.ativo">
           <span class="alca" aria-hidden="true">⠿</span>
-          <span class="rotulo">{{ link.rotulo }}</span>
+          <span class="rotulo-container" tabindex="0" [attr.aria-label]="link.rotulo"
+                [attr.aria-describedby]="'playlist-tooltip-' + i">
+            <span class="rotulo">{{ link.rotulo }}</span>
+            <span class="tooltip-playlist" [id]="'playlist-tooltip-' + i" role="tooltip">
+              {{ link.rotulo }}
+            </span>
+          </span>
 
           <button *ngFor="let a of acoesItem" type="button" class="btn-item"
                   [title]="a.rotulo" [attr.aria-label]="a.rotulo"

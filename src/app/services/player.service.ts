@@ -178,6 +178,37 @@ export class PlayerService {
     this.loadCurrent();
   }
 
+  preencherMetadados(catalogo: Record<string, string>[]): void {
+    const metadadosPorVideo = new Map<string, { titulo: string; artista: string }>();
+    for (const musica of catalogo) {
+      const id = getVideoId(musica['Link'] ?? '');
+      const titulo = (musica['Obra'] ?? musica['Nome'] ?? '').trim();
+      const artista = (musica['Artista'] ?? '').trim();
+      if (id && (titulo || artista) && !metadadosPorVideo.has(id)) {
+        metadadosPorVideo.set(id, { titulo, artista });
+      }
+    }
+
+    let alterou = false;
+    const fila = this.queue().map((musica) => {
+      const id = getVideoId(musica.link);
+      const metadados = id ? metadadosPorVideo.get(id) : undefined;
+      if (!metadados) return musica;
+
+      const titulo = musica.titulo.trim() ? musica.titulo : metadados.titulo;
+      const artista = musica.artista?.trim() ? musica.artista : metadados.artista;
+      if (titulo === musica.titulo && artista === musica.artista) return musica;
+
+      alterou = true;
+      return { ...musica, titulo, artista };
+    });
+
+    if (alterou) {
+      this.queue.set(fila);
+      this.cachePlaylist();
+    }
+  }
+
   playQueue(list: Musica[], i: number) {
     this.queue.set(list);
     this.index.set(i);

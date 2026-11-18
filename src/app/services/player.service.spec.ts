@@ -53,4 +53,22 @@ describe('PlayerService', () => {
     expect(player.queue()).toEqual([first, second]);
     expect(player.current()).toEqual(second);
   });
+
+  it('fills missing metadata on playlist tracks from the music catalog', () => {
+    const link = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+    player.adicionarNaFila(link);
+
+    player.preencherMetadados([{
+      Artista: 'Rick Astley',
+      Obra: 'Never Gonna Give You Up',
+      Link: link,
+    }]);
+
+    expect(player.current()).toEqual({
+      id: 'dQw4w9WgXcQ',
+      titulo: 'Never Gonna Give You Up',
+      artista: 'Rick Astley',
+      link,
+    });
+  });
 });

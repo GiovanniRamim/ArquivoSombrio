@@ -22,9 +22,13 @@
     </div>
 
     <div class="info">
-        <strong class="titulo">{{ player.current()?.titulo ?? 'Nenhuma música' }}</strong>
-        @if (player.current()?.artista) {
-            <span class="artista">{{ player.current()?.artista }}</span>
+        @if (player.current(); as musica) {
+            <strong class="titulo">{{ musica.titulo || 'Música sem título' }}</strong>
+            @if (musica.artista) {
+                <span class="artista">{{ musica.artista }}</span>
+            }
+        } @else {
+            <strong class="titulo">Nenhuma música</strong>
         }
     </div>
 

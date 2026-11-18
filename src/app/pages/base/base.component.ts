@@ -5,6 +5,7 @@ import { MusicaComponent } from '../musica/musica.component';
 import { MidiasComponent } from '../midias/midias.component';
 import { LojasComponent } from '../lojas/lojas.component';
 import { BlogComponent } from '../blog/blog.component';
+import { InicioComponent } from '../inicio/inicio.component';
 import { PaginaService } from '../../services/pagina.service';
 import { PlayerService } from '../../services/player.service';
 
@@ -18,6 +19,7 @@ import { PlayerService } from '../../services/player.service';
     MidiasComponent,
     LojasComponent,
     BlogComponent,
+    InicioComponent,
   ],
   templateUrl: './base.component.html',
 })

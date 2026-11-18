@@ -36,7 +36,7 @@ a {
   color: var(--destaque);
 }
 
-.titulo {
+.titulo, .secao-titulo{
   font-family: 'Cinzel Decorative', sans-serif;
 }
 

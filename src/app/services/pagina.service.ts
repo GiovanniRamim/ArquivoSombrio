@@ -4,7 +4,7 @@ import { PlayerService } from './player.service';
 
 @Injectable({ providedIn: 'root' })
 export class PaginaService {
-  private readonly paginaSubject = new BehaviorSubject<string>('literatura');
+  private readonly paginaSubject = new BehaviorSubject<string>('inicio');
   private readonly player = inject(PlayerService);
 
   /** Página atualmente selecionada, emitida sempre que muda. */
