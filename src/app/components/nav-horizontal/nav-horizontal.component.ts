@@ -14,9 +14,9 @@ export class NavHorizontalComponent {
   private readonly paginaService = inject(PaginaService);
 
   links = [
+    { rotulo: 'Música', pagina: 'musica' },
     { rotulo: 'Literatura', pagina: 'literatura' },
     { rotulo: 'Mídias', pagina: 'midias' },
-    { rotulo: 'Música', pagina: 'musica' },
     { rotulo: 'Blog', pagina: 'blog' },
     { rotulo: 'Lojas', pagina: 'lojas' },
   ];
