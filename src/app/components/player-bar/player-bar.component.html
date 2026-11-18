@@ -10,6 +10,8 @@
         <button (click)="player.prev()">⏮</button>
         <button (click)="player.toggle()">{{ player.playing() ? '⏸' : '▶' }}</button>
         <button (click)="player.next()">⏭</button>
+        <button type="button" class="video-toggle" (click)="abrirVideo()" [disabled]="!player.current()"
+            aria-label="Abrir vídeo da música atual" title="Abrir vídeo">▣</button>
 
         <button type="button" class="volume-toggle" (click)="volumeAberto = !volumeAberto"
             [attr.aria-expanded]="volumeAberto">🔊</button>
@@ -26,8 +28,18 @@
         }
     </div>
 
-    <!-- o iframe do YouTube nasce aqui; precisa ficar visível -->
-    <div class="yt-box">
-        <div id="yt-player"></div>
+    <div #videoModal class="video-modal" [class.aberto]="videoAberto"
+        [style.left.px]="modalLeft" [style.top.px]="modalTop"
+        [style.right]="modalLeft === null ? '1rem' : 'auto'"
+        role="dialog" aria-label="Vídeo da música atual" [attr.aria-hidden]="!videoAberto">
+        @if (videoAberto) {
+            <div class="video-modal-header" (pointerdown)="iniciarArraste($event)">
+                <span>{{ tituloVideo }}</span>
+                <button type="button" class="video-close" (click)="fecharVideo()" aria-label="Fechar vídeo">×</button>
+            </div>
+        }
+        <div class="yt-box">
+            <div id="yt-player"></div>
+        </div>
     </div>
 </div>

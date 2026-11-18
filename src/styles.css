@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Cinzel Decorative';
+  src: url('/assets/fonts/CinzelDecorative-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
   --bg: #0d1117;
@@ -26,6 +34,10 @@ h1 {
 
 a {
   color: var(--destaque);
+}
+
+.titulo {
+  font-family: 'Cinzel Decorative', sans-serif;
 }
 
 .app-player-bar {

@@ -3,8 +3,8 @@
 }
 
 .tabela-wrapper {
-  overflow-x: auto;
-  height: 45rem;
+  overflow: auto;
+  height: 80vh;
   border: 1px solid #2a2f3a;
   border-radius: 8px;
 }
@@ -14,6 +14,12 @@ table {
   border-collapse: collapse;
   background-color: #181b22;
   table-layout: fixed;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 th,
@@ -31,8 +37,6 @@ th {
   background-color: #222733;
   color: #e6e6e6;
   font-weight: 600;
-  position: sticky;
-  top: 0;
 }
 
 td {
@@ -59,6 +63,7 @@ tbody tr:hover {
   color: #e6e6e6;
   font: inherit;
   font-size: 0.85rem;
+  z-index: 1;
 }
 
 .filtro:focus {
@@ -92,6 +97,7 @@ tbody tr:hover {
 }
 
 .item-botao {
+  position: relative;
   max-width: 100%;
   padding: 0.25rem 0.6rem;
   border: 1px solid #2a2f3a;
@@ -100,8 +106,38 @@ tbody tr:hover {
   color: #c9d1d9;
   cursor: pointer;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+.item-botao:hover,
+.item-botao:focus-visible {
+  z-index: 20;
+}
+
+.tooltip {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 50%;
+  z-index: 20;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #2a2f3a;
+  border-radius: 4px;
+  background-color: #222733;
+  color: #c9d1d9;
+  font-size: 0.8rem;
+  font-weight: normal;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -0.15rem);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+}
+
+.item-botao:hover .tooltip,
+.item-botao:focus-visible .tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
 }
 
 .dropdown-menu {

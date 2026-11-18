@@ -27,19 +27,17 @@
           <td *ngFor="let coluna of dados.colunas">
             <ng-container *ngIf="coluna === colunaLink && linha[coluna]; else texto">
               <div class="dropdown">
-                <button type="button" class="item-botao" (click)="alternarMenu(linha)">Links</button>
-                <div class="dropdown-menu" *ngIf="menuAberto === linha">
-                  <a [href]="linha[coluna]" target="_blank" rel="noopener noreferrer">{{linha[coluna]}}</a>
-                </div>
                 <ng-container *ngIf="acoes; else acaoPadrao">
                   <button
                     *ngFor="let a of acoes"
                     type="button"
                     class="item-botao"
-                    [title]="a.rotulo"
                     [attr.aria-label]="a.rotulo"
                     (click)="a.executar(linha)"
-                  >{{ a.icone }} {{ a.rotulo }}</button>
+                  >
+                    {{ a.icone }}
+                    <span class="tooltip" role="tooltip">{{ a.rotulo }}</span>
+                  </button>
                 </ng-container>
                 <ng-template #acaoPadrao>
                   <button type="button" class="item-botao" (click)="executeCustomAction(linha)">Do Something</button>

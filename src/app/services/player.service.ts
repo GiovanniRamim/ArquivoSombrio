@@ -9,11 +9,41 @@ export interface Musica { id: number | string; titulo: string; artista?: string;
 export const getVideoId = (url = ''): string | undefined =>
   url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/)?.[1];
 
+const CURRENT_PLAYLIST_CACHE_KEY = 'biblioteca-das-sombras.current-playlist';
+
+interface CachedPlaylist {
+  queue: Musica[];
+  index: number;
+}
+
+function isMusica(value: unknown): value is Musica {
+  if (typeof value !== 'object' || value === null) return false;
+  const musica = value as Record<string, unknown>;
+
+  return (
+    (typeof musica['id'] === 'number' || typeof musica['id'] === 'string') &&
+    typeof musica['titulo'] === 'string' &&
+    (musica['artista'] === undefined || typeof musica['artista'] === 'string') &&
+    typeof musica['link'] === 'string'
+  );
+}
+
+function isCachedPlaylist(value: unknown): value is CachedPlaylist {
+  if (typeof value !== 'object' || value === null) return false;
+  const cached = value as Record<string, unknown>;
+
+  return Array.isArray(cached['queue']) &&
+    cached['queue'].every(isMusica) &&
+    typeof cached['index'] === 'number';
+}
+
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
   private yt: any;
   private ready = false;
   private pollId?: ReturnType<typeof setInterval>;
+  private videoWidth = 640;
+  private videoHeight = 360;
 
   readonly queue = signal<Musica[]>([]);
   readonly index = signal(-1);
@@ -29,13 +59,14 @@ export class PlayerService {
   async init(elementId: string): Promise<void> {
     await this.loadApi();
     this.yt = new window.YT.Player(elementId, {
-      width: 1,
-      height: 1,
+      width: this.videoWidth,
+      height: this.videoHeight,
       playerVars: { playsinline: 1, rel: 0 },
       events: {
         onReady: () => this.zone.run(() => {
           this.ready = true;
           this.yt.setVolume(this.volume());
+          this.yt.setSize(this.videoWidth, this.videoHeight);
           this.loadCurrent(); // caso já exista música selecionada
         }),
         onStateChange: (e: any) => this.zone.run(() => this.onState(e.data)),
@@ -79,14 +110,73 @@ export class PlayerService {
   }
 
   private loadCurrent() {
-    const id = getVideoId(this.current()?.link);
+    const musica = this.current();
+    const id = getVideoId(musica?.link);
+    if (!musica || !id) {
+      this.cachePlaylist();
+      return;
+    }
+
+    this.cachePlaylist();
     if (this.ready && id) {
       this.currentTime.set(0);
       this.yt.loadVideoById(id);
     }
   }
 
+  private cachePlaylist(): void {
+    try {
+      const cached: CachedPlaylist = {
+        queue: this.queue(),
+        index: this.index(),
+      };
+      window.localStorage.setItem(CURRENT_PLAYLIST_CACHE_KEY, JSON.stringify(cached));
+    } catch (error) {
+      console.error('Não foi possível salvar a playlist atual no cache.', error);
+    }
+  }
+
   // ---- API pública ----
+
+  restoreCurrent(): void {
+    let cached: string | null;
+    try {
+      cached = window.localStorage.getItem(CURRENT_PLAYLIST_CACHE_KEY);
+    } catch (error) {
+      console.error('Não foi possível acessar o cache da playlist atual.', error);
+      return;
+    }
+    if (!cached) return;
+
+    let playlist: unknown;
+    try {
+      playlist = JSON.parse(cached);
+    } catch (error) {
+      console.error('Não foi possível ler a playlist salva no cache.', error);
+      return;
+    }
+
+    if (!isCachedPlaylist(playlist)) {
+      console.warn('A playlist salva no cache possui um formato inválido.');
+      return;
+    }
+
+    const queue: Musica[] = [];
+    for (const musica of playlist.queue) {
+      const videoId = getVideoId(musica.link);
+      if (videoId) queue.push({ ...musica, id: videoId });
+    }
+
+    if (!queue.length) {
+      console.warn('A playlist salva no cache não contém links válidos do YouTube.');
+      return;
+    }
+
+    const index = playlist.index >= 0 && playlist.index < queue.length ? playlist.index : 0;
+    this.queue.set(queue);
+    this.index.set(index);
+    this.loadCurrent();
+  }
 
   playQueue(list: Musica[], i: number) {
     this.queue.set(list);
@@ -122,6 +212,12 @@ export class PlayerService {
     this.volume.set(v);
   }
 
+  setVideoSize(width: number, height: number): void {
+    this.videoWidth = width;
+    this.videoHeight = height;
+    if (this.ready) this.yt.setSize(width, height);
+  }
+
     // 1. ID do vídeo atual, derivado do link (substitui o uso do id da lista)
   readonly currentVideoId = computed(() => getVideoId(this.current()?.link));
 
@@ -135,6 +231,7 @@ export class PlayerService {
 
     // clicou na música que já está carregada: alterna play/pause
     if (videoId === this.currentVideoId()) {
+      this.cachePlaylist();
       this.toggle();
       return true;
     }
@@ -176,6 +273,8 @@ export class PlayerService {
     if (this.index() < 0) {
       this.index.set(0);
       this.loadCurrent();
+    } else {
+      this.cachePlaylist();
     }
     return true;
   }
@@ -191,10 +290,12 @@ export class PlayerService {
 
     if (!nova.length) {
       this.index.set(-1);
+      this.cachePlaylist();
       return;
     }
     if (atual && nova.includes(atual)) {
       this.index.set(nova.indexOf(atual));
+      this.cachePlaylist();
     } else {
       // a música atual foi removida: toca a que ficou na mesma posição
       this.index.set(Math.min(indice, nova.length - 1));
@@ -211,7 +312,10 @@ export class PlayerService {
     const [item] = fila.splice(de, 1);
     fila.splice(para, 0, item);
     this.queue.set(fila);
-    if (atual) this.index.set(fila.indexOf(atual));
+    if (atual) {
+      this.index.set(fila.indexOf(atual));
+      this.cachePlaylist();
+    }
   }
 
   // 3. Verifica se um link é o que está tocando (para o destaque)
