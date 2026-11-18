@@ -1,8 +1,5 @@
 .player-bar {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    z-index: 1000;
+    position: relative;
     width: 100%;
     box-sizing: border-box;
     display: flex;

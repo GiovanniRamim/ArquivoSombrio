@@ -39,11 +39,3 @@ a {
 .titulo, .secao-titulo{
   font-family: 'Cinzel Decorative', sans-serif;
 }
-
-.app-player-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-}

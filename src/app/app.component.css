@@ -1,19 +1,28 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
 .layout {
   display: flex;
-  min-height: 100vh;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .conteudo {
   flex: 1;
+  min-height: 0;
   padding: 2rem;
   min-width: 0;
-  overflow-x: hidden;
+  overflow: auto;
 }
 
+app-nav-horizontal,
 app-player-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
+  display: block;
+  flex: 0 0 auto;
 }
