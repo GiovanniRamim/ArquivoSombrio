@@ -33,6 +33,7 @@ export class SubsectionsComponent {
 
   /** Ativa o modo playlist: botões por item, menu e arrastar para reordenar. */
   @Input() modoPlaylist = false;
+  @Input() emModal = false;
   @Input() acoesItem: AcaoSubsecao[] = [];
   @Input() acoesMenu: AcaoSubsecao[] = [];
   @Input() acaoCabecalho: (() => void | Promise<void>) | null = null;

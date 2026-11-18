@@ -10,6 +10,9 @@
         <button (click)="player.prev()">⏮</button>
         <button (click)="player.toggle()">{{ player.playing() ? '⏸' : '▶' }}</button>
         <button (click)="player.next()">⏭</button>
+        <button type="button" class="playlist-toggle" (click)="abrirPlaylist()"
+            [attr.aria-expanded]="playlistAberta" aria-controls="playlist-modal"
+            aria-label="Abrir playlist" title="Playlist">☷</button>
         <button type="button" class="video-toggle" (click)="abrirVideo()" [disabled]="!player.current()"
             aria-label="Abrir vídeo da música atual" title="Abrir vídeo">▣</button>
 
@@ -45,5 +48,32 @@
         <div class="yt-box">
             <div id="yt-player"></div>
         </div>
+    </div>
+
+    <div #playlistModal id="playlist-modal" class="playlist-modal" [class.aberto]="playlistAberta"
+        [style.left.px]="playlistModalLeft" [style.top.px]="playlistModalTop"
+        [style.right]="playlistModalLeft === null ? '1rem' : 'auto'"
+        [style.bottom]="playlistModalTop === null ? '10rem' : 'auto'"
+        role="dialog" aria-label="Playlist" [attr.aria-hidden]="!playlistAberta">
+        @if (playlistAberta) {
+            <div class="playlist-modal-header" (pointerdown)="iniciarArrastePlaylist($event)">
+                <span>Playlist · {{ player.queue().length }}</span>
+                <button type="button" class="playlist-close" (click)="fecharPlaylist()"
+                    aria-label="Fechar playlist">×</button>
+            </div>
+            <app-subsections
+                [emModal]="true"
+                titulo="Fila atual"
+                [links]="itensFila"
+                [modoPlaylist]="true"
+                [acoesItem]="acoesItemPlaylist"
+                [acoesMenu]="acoesMenuPlaylist"
+                [acaoCabecalho]="adicionarCincoAleatorias"
+                rotuloAcaoCabecalho="🎲 Adicionar 5 aleatórias"
+                [acaoCabecalhoDesabilitada]="carregandoAleatorias"
+                [mensagemCabecalho]="mensagemAleatorias"
+                (reordenar)="reordenarFila($event)"
+            ></app-subsections>
+        }
     </div>
 </div>

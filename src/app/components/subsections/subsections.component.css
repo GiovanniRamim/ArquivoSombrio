@@ -9,6 +9,20 @@
   box-sizing: border-box;
 }
 
+.subsections.em-modal {
+  width: 100%;
+  min-height: 0;
+  max-height: 60vh;
+  padding: 0.75rem;
+  overflow-y: auto;
+  background: transparent;
+  border: 0;
+}
+
+.subsections.em-modal .cabecalho {
+  margin-bottom: 0.75rem;
+}
+
 .cabecalho {
   display: flex;
   flex-direction: column;
