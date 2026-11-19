@@ -12,10 +12,8 @@ export class InicioComponent {
 
   readonly secoes = [
     { pagina: 'musica', titulo: 'Música', descricao: 'Player de música.' },
-    { pagina: 'literatura', titulo: 'Literatura', descricao: 'Algumas obras da literatura dark.' },
-    { pagina: 'midias', titulo: 'Mídias', descricao: 'Filmes, vídeos e outras mídias' },
-    { pagina: 'blog', titulo: 'Blog', descricao: 'Em obra.' },
-    { pagina: 'lojas', titulo: 'Lojas', descricao: 'Em obra.' },
+    { pagina: 'literatura', titulo: 'Literatura', descricao: 'EM BREVE', disabled: true },
+    { pagina: 'midias', titulo: 'Mídias', descricao: 'EM BREVE', disabled: true},
   ];
 
   abrirSecao(pagina: string): void {

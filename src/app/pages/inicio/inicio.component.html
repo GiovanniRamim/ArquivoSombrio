@@ -11,7 +11,7 @@
 
   <nav class="secoes" aria-label="Seções do Arquivo Sombrio">
     @for (secao of secoes; track secao.pagina) {
-      <button type="button" class="secao" (click)="abrirSecao(secao.pagina)">
+      <button type="button" class="secao" (click)="abrirSecao(secao.pagina)" disabled="{{ secao.disabled }}">
         <span class="secao-titulo">{{ secao.titulo }}</span>
         <span class="secao-descricao">{{ secao.descricao }}</span>
         <span class="secao-acao" aria-hidden="true">Explorar →</span>

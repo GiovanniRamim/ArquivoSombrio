@@ -1,12 +1,30 @@
-<nav class="nav-horizontal">
-  <h2 class="titulo">
-    <a routerLink="/" (click)="selecionar('inicio')">⛧ Arquivo Sombrio ⛧</a>
-  </h2>
-  <ul>
-    @for (link of links; track link.pagina) {
-      <a routerLink="/" routerLinkActive="ativo" (click)="selecionar(link.pagina)" class="nav-label">
-        {{ link.rotulo }}
-      </a>
-    }
-  </ul>
+<nav class="nav-flutuante" aria-label="Navegação principal" (keydown.escape)="fecharMenu()">
+  <button
+    type="button"
+    class="botao-menu"
+    [class.aberto]="menuAberto"
+    [attr.aria-expanded]="menuAberto"
+    aria-controls="links-navegacao"
+    [attr.aria-label]="menuAberto ? 'Fechar menu' : 'Abrir menu'"
+    (click)="menuAberto = !menuAberto"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  @if (menuAberto) {
+    <div class="painel-menu" id="links-navegacao">
+      <a class="titulo" routerLink="/" (click)="selecionar('inicio')">⛧ Arquivo Sombrio ⛧</a>
+      <ul>
+        @for (link of links; track link.pagina) {
+          <li>
+            <a routerLink="/" routerLinkActive="ativo" (click)="selecionar(link.pagina)">
+              {{ link.rotulo }}
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+  }
 </nav>

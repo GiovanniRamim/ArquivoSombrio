@@ -13,15 +13,22 @@ import { PaginaService } from '../../services/pagina.service';
 export class NavHorizontalComponent {
   private readonly paginaService = inject(PaginaService);
 
+  menuAberto = false;
+
   links = [
     { rotulo: 'Música', pagina: 'musica' },
-    { rotulo: 'Literatura', pagina: 'literatura' },
-    { rotulo: 'Mídias', pagina: 'midias' },
-    { rotulo: 'Blog', pagina: 'blog' },
-    { rotulo: 'Lojas', pagina: 'lojas' },
+    // { rotulo: 'Literatura', pagina: 'literatura' },
+    // { rotulo: 'Mídias', pagina: 'midias' },
+    // { rotulo: 'Blog', pagina: 'blog' },
+    // { rotulo: 'Lojas', pagina: 'lojas' },
   ];
 
   selecionar(pagina: string): void {
     this.paginaService.selecionar(pagina);
+    this.menuAberto = false;
+  }
+
+  fecharMenu(): void {
+    this.menuAberto = false;
   }
 }
