@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, ViewChild, inject }
 import { SubsectionsComponent, ItemSubsecao, AcaoSubsecao } from '../subsections/subsections.component';
 import { DataService } from '../../services/data.service';
 import { getVideoId, PlayerService } from '../../services/player.service';
+import { ModalDragService } from '../../services/modal-drag.service';
 
 @Component({
   selector: 'app-player-bar',
@@ -13,6 +14,7 @@ import { getVideoId, PlayerService } from '../../services/player.service';
 export class PlayerBarComponent implements AfterViewInit {
   player = inject(PlayerService);
   private dataService = inject(DataService);
+  private readonly arrasteModal = inject(ModalDragService);
   @ViewChild('videoModal') private videoModal?: ElementRef<HTMLElement>;
   @ViewChild('playlistModal') private playlistModal?: ElementRef<HTMLElement>;
   /** Controla se o slider de volume está visível. */
@@ -30,13 +32,6 @@ export class PlayerBarComponent implements AfterViewInit {
   private catalogoMusical: Record<string, string>[] | null = null;
   private catalogoPromise: Promise<Record<string, string>[]> | null = null;
   private titulosPorVideo = new Map<string, string>();
-
-  private arrastando = false;
-  private dragOffsetX = 0;
-  private dragOffsetY = 0;
-  private arrastandoPlaylist = false;
-  private playlistDragOffsetX = 0;
-  private playlistDragOffsetY = 0;
 
   ngAfterViewInit() {
     this.player.init('yt-player');
@@ -70,7 +65,7 @@ export class PlayerBarComponent implements AfterViewInit {
 
   fecharPlaylist(): void {
     this.playlistAberta = false;
-    this.arrastandoPlaylist = false;
+    this.arrasteModal.parar('playlist');
     this.playlistModalLeft = null;
     this.playlistModalTop = null;
   }
@@ -178,7 +173,7 @@ export class PlayerBarComponent implements AfterViewInit {
 
   fecharVideo(): void {
     this.videoAberto = false;
-    this.arrastando = false;
+    this.arrasteModal.parar('video');
     this.modalLeft = null;
     this.modalTop = null;
   }
@@ -188,12 +183,18 @@ export class PlayerBarComponent implements AfterViewInit {
     const modal = this.videoModal?.nativeElement;
     if (!modal) return;
 
+    if (event.currentTarget instanceof HTMLElement) {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
+
     const bounds = modal.getBoundingClientRect();
     this.modalLeft = bounds.left;
     this.modalTop = bounds.top;
-    this.dragOffsetX = event.clientX - bounds.left;
-    this.dragOffsetY = event.clientY - bounds.top;
-    this.arrastando = true;
+    this.arrasteModal.iniciar({
+      modal: 'video',
+      offsetX: event.clientX - bounds.left,
+      offsetY: event.clientY - bounds.top,
+    });
     event.preventDefault();
   }
 
@@ -205,50 +206,46 @@ export class PlayerBarComponent implements AfterViewInit {
     const bounds = modal.getBoundingClientRect();
     this.playlistModalLeft = bounds.left;
     this.playlistModalTop = bounds.top;
-    this.playlistDragOffsetX = event.clientX - bounds.left;
-    this.playlistDragOffsetY = event.clientY - bounds.top;
-    this.arrastandoPlaylist = true;
+    this.arrasteModal.iniciar({
+      modal: 'playlist',
+      offsetX: event.clientX - bounds.left,
+      offsetY: event.clientY - bounds.top,
+    });
     event.preventDefault();
   }
 
   @HostListener('document:pointermove', ['$event'])
   moverModal(event: PointerEvent): void {
-    if (!this.arrastando) return;
+    const arraste = this.arrasteModal.atual;
+    if (!arraste) return;
 
-    const bounds = this.videoModal?.nativeElement.getBoundingClientRect();
-    if (!bounds) return;
+    const modal = arraste.modal === 'video'
+      ? this.videoModal?.nativeElement
+      : this.playlistModal?.nativeElement;
 
-    this.modalLeft = Math.min(
-      window.innerWidth - bounds.width,
-      Math.max(0, event.clientX - this.dragOffsetX),
-    );
-    this.modalTop = Math.min(
-      window.innerHeight - bounds.height,
-      Math.max(0, event.clientY - this.dragOffsetY),
-    );
-  }
+    if (!modal) {
+      this.arrasteModal.parar(arraste.modal);
+      return;
+    }
 
-  @HostListener('document:pointermove', ['$event'])
-  moverPlaylistModal(event: PointerEvent): void {
-    if (!this.arrastandoPlaylist) return;
+    const bounds = modal.getBoundingClientRect();
+    const maxLeft = Math.max(0, window.innerWidth - bounds.width);
+    const maxTop = Math.max(0, window.innerHeight - bounds.height);
+    const left = Math.min(maxLeft, Math.max(0, event.clientX - arraste.offsetX));
+    const top = Math.min(maxTop, Math.max(0, event.clientY - arraste.offsetY));
 
-    const bounds = this.playlistModal?.nativeElement.getBoundingClientRect();
-    if (!bounds) return;
-
-    this.playlistModalLeft = Math.min(
-      Math.max(0, window.innerWidth - bounds.width),
-      Math.max(0, event.clientX - this.playlistDragOffsetX),
-    );
-    this.playlistModalTop = Math.min(
-      Math.max(0, window.innerHeight - bounds.height),
-      Math.max(0, event.clientY - this.playlistDragOffsetY),
-    );
+    if (arraste.modal === 'video') {
+      this.modalLeft = left;
+      this.modalTop = top;
+    } else {
+      this.playlistModalLeft = left;
+      this.playlistModalTop = top;
+    }
   }
 
   @HostListener('document:pointerup')
   pararArraste(): void {
-    this.arrastando = false;
-    this.arrastandoPlaylist = false;
+    this.arrasteModal.parar();
   }
 
   @HostListener('window:resize')

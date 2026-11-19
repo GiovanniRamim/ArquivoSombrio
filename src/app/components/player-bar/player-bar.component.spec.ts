@@ -50,6 +50,26 @@ describe('PlayerBarComponent', () => {
     expect(component.playlistAberta).toBeFalse();
   });
 
+  it('drags the video modal through the shared drag listener', () => {
+    component.abrirVideo();
+    fixture.detectChanges();
+    const modal = fixture.nativeElement.querySelector('.video-modal') as HTMLElement;
+    spyOn(modal, 'getBoundingClientRect').and.returnValue(new DOMRect(10, 20, 300, 200));
+
+    component.iniciarArraste(new PointerEvent('pointerdown', {
+      button: 0,
+      clientX: 30,
+      clientY: 40,
+    }));
+    component.moverModal(new PointerEvent('pointermove', {
+      clientX: 80,
+      clientY: 100,
+    }));
+
+    expect(component.modalLeft).toBe(60);
+    expect(component.modalTop).toBe(80);
+  });
+
   it('drags the playlist modal by its header and keeps it within the viewport', () => {
     component.abrirPlaylist();
     fixture.detectChanges();
@@ -61,7 +81,7 @@ describe('PlayerBarComponent', () => {
       clientX: 35,
       clientY: 45,
     }));
-    component.moverPlaylistModal(new PointerEvent('pointermove', {
+    component.moverModal(new PointerEvent('pointermove', {
       clientX: 80,
       clientY: 90,
     }));
@@ -69,7 +89,7 @@ describe('PlayerBarComponent', () => {
     expect(component.playlistModalLeft).toBe(65);
     expect(component.playlistModalTop).toBe(75);
 
-    component.moverPlaylistModal(new PointerEvent('pointermove', {
+    component.moverModal(new PointerEvent('pointermove', {
       clientX: window.innerWidth + 200,
       clientY: window.innerHeight + 200,
     }));
