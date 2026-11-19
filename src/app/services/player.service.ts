@@ -9,7 +9,7 @@ export interface Musica { id: number | string; titulo: string; artista?: string;
 export const getVideoId = (url = ''): string | undefined =>
   url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/)?.[1];
 
-const CURRENT_PLAYLIST_CACHE_KEY = 'biblioteca-das-sombras.current-playlist';
+const CURRENT_PLAYLIST_CACHE_KEY = 'arquivo-sombrio.current-playlist';
 
 interface CachedPlaylist {
   queue: Musica[];

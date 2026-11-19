@@ -29,7 +29,7 @@ describe('PlayerBarComponent', () => {
   });
 
   afterEach(() => {
-    window.localStorage.removeItem('biblioteca-das-sombras.current-playlist');
+    window.localStorage.removeItem('arquivo-sombrio.current-playlist');
   });
 
   it('should create', () => {

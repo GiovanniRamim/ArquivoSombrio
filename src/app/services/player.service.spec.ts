@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { PlayerService } from './player.service';
 
 describe('PlayerService', () => {
-  const cacheKey = 'biblioteca-das-sombras.current-playlist';
+  const cacheKey = 'arquivo-sombrio.current-playlist';
   let player: PlayerService;
 
   beforeEach(() => {

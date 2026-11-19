@@ -27,7 +27,7 @@ jobs:
 
       - run: npm ci
 
-      - run: npx ng build --configuration production --base-href /BibliotecaDasSombras/
+      - run: npx ng build --configuration production --base-href /ArquivoSombrio/
 
       - uses: actions/configure-pages@v5
 

@@ -3,7 +3,7 @@ import { PlayerService } from '../../services/player.service';
 import { MusicaComponent } from './musica.component';
 
 describe('MusicaComponent', () => {
-  const cacheKey = 'biblioteca-das-sombras.current-playlist';
+  const cacheKey = 'arquivo-sombrio.current-playlist';
   let player: PlayerService;
   let component: MusicaComponent;
 
